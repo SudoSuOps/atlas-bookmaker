@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas-bookmaker.swarmandbee.ai/schemas/pair.json",
+  "title": "Bookmaker Training Pair · v2",
+  "description": "Single training pair in the Bookmaker v2 corpus. Mirrors the aviation cook hivecell schema with a `deliverable` field added for stratification.",
+  "type": "object",
+  "required": ["messages", "deliverable", "domain", "fingerprint"],
+  "properties": {
+    "cell_id": {
+      "type": "string",
+      "description": "HIVE-BMK-{16-char-hex} · seed-cell ID from hivecell generation"
+    },
+    "messages": {
+      "type": "array",
+      "description": "Chat-template-formatted messages · [system, user, assistant]",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["role", "content"],
+        "properties": {
+          "role": {"type": "string", "enum": ["system", "user", "assistant"]},
+          "content": {"type": "string"}
+        }
+      }
+    },
+    "deliverable": {
+      "type": "string",
+      "description": "Which of the 10 Bookmaker deliverable types this pair trains",
+      "enum": [
+        "om_pdf",
+        "landing_page",
+        "eblast",
+        "costar_listing",
+        "social_card",
+        "flier",
+        "investor_toc",
+        "map_caption",
+        "comp_callout",
+        "photo_brief"
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "const": "bookmaker"
+    },
+    "stream": {
+      "type": "string",
+      "description": "Sub-stream tagged for analysis (usually = deliverable)"
+    },
+    "grade": {
+      "type": "string",
+      "enum": ["royal-jelly", "honey", "propolis", "receipts"],
+      "description": "Tribunal-assigned tier (royal-jelly = top, ≥0.85 score)"
+    },
+    "verification_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Tribunal final composite score · 0-100"
+    },
+    "gate_results": {
+      "type": "object",
+      "description": "Deterministic gate booleans applied during corpus build",
+      "properties": {
+        "json_valid": {"type": "boolean"},
+        "output_length": {"type": "boolean"},
+        "numeric_verify": {"type": "boolean"},
+        "concept_present": {"type": "boolean"},
+        "dedup": {"type": "boolean"},
+        "degenerate": {"type": "boolean"},
+        "strict_input": {"type": "boolean", "description": "Every number in assistant content appears in user content (firm-doctrine gate)"},
+        "think_tag_clean": {"type": "boolean", "description": "No <think> contamination in assistant"}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "description": "Provenance chain · which sources/scripts/teachers produced this pair",
+      "properties": {
+        "source": {"type": "string", "enum": ["A", "B", "C", "D"], "description": "A=marketing-honey, B=cre-honey-flip, C=synth-grinder, D=reit-decks"},
+        "gen_model": {"type": "string", "description": "Teacher model that wrote the assistant content"},
+        "cook_script": {"type": "string", "description": "Path to script that produced this pair"},
+        "cook_run": {"type": "string", "description": "Cook run ID · atlas-bookmaker-v2-2026-05-08 etc."},
+        "source_pair_id": {"type": "string", "description": "If source=B, the cre_honey_stamped pair_id this was flipped from"}
+      }
+    },
+    "fingerprint": {
+      "type": "string",
+      "description": "SHA-256 hex of (system|user|assistant) concatenation · dedup key"
+    },
+    "swarmchain_validation": {
+      "type": "object",
+      "description": "Tribunal pass results (post-Phase-2)",
+      "properties": {
+        "judge_a_score": {"type": "number"},
+        "judge_b_score": {"type": "number"},
+        "drift": {"type": "number", "description": "abs(judge_a - judge_b) · >0.15 flags manual review"},
+        "verdict": {"type": "string", "enum": ["PASS", "REVIEW", "FAIL"]},
+        "classification": {"type": "string", "enum": ["royal-jelly", "honey", "propolis", "receipts"]},
+        "judge_reasoning": {"type": "string"},
+        "sealed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

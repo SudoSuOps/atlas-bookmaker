@@ -1,0 +1,85 @@
+[project]
+name = "atlas-bookmaker"
+version = "0.2.0"
+description = "Atlas-Bookmaker · the AI Marketing Coordinator for Swarm & Bee LLC · Granite-Bee stack · Apache 2.0"
+authors = [{name = "Swarm & Bee LLC", email = "ops@swarmandbee.ai"}]
+license = {text = "Apache-2.0"}
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    # Core ML stack
+    "torch>=2.10.0",
+    "transformers>=5.7.0",
+    "peft>=0.19.0",
+    "bitsandbytes>=0.49.0",
+    "accelerate>=1.0.0",
+    "trl>=1.3.0",
+    "datasets>=4.8.0",
+    "huggingface-hub>=0.30.0",
+
+    # IBM Granite-Bee runtime
+    "vllm>=0.7.0",
+    "pillow>=12.2.0",  # required by Granite-Vision
+
+    # Document parsing (Granite-Docling integration)
+    "docling[vlm]>=2.90.0",
+
+    # Audio (Granite-Speech)
+    "torchaudio>=2.10.0",
+    "soundfile>=0.12.0",
+
+    # Agent orchestration
+    "beeai-framework>=0.1.0",
+
+    # Corpus build pipeline
+    "httpx>=0.27.0",
+    "tenacity>=8.2.0",
+    "pydantic>=2.7.0",
+    "tqdm>=4.66.0",
+
+    # Hedera anchoring
+    "hedera-sdk>=2.40.0",  # operator: 0.0.10291827 · topic: 0.0.10291838
+
+    # API serving
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+
+    # Telemetry
+    "rich>=13.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.6.0",
+    "mypy>=1.10.0",
+]
+
+teacher = [
+    # For corpus diversity sampler · 20% of source C
+    "anthropic>=0.40.0",  # Claude Opus diversity injector
+]
+
+[project.scripts]
+atlas-bookmaker = "agent.main:cli"
+
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agent", "corpus", "deploy", "eval"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "RUF"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

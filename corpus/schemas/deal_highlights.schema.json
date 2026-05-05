@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas-bookmaker.swarmandbee.ai/schemas/deal_highlights.json",
+  "title": "Deal Highlights · Bookmaker INPUT",
+  "description": "The structured deal data the Hack hands to the Bookmaker. Every number here is locked by the Hack at underwrite time. The Bookmaker references these values but NEVER computes new ones. If a field is missing, the Bookmaker writes [TBD: <field>] in the output.",
+  "type": "object",
+  "required": ["asset_class", "market", "price", "cap_rate"],
+  "properties": {
+    "deal_id": {
+      "type": "string",
+      "description": "Firm-internal deal ID (sha256 fingerprint or atlas-cookbook ID)"
+    },
+    "asset_class": {
+      "type": "string",
+      "description": "STNL category — Dollar General STNL · Walgreens corner · CVS pharmacy · QSR ground lease · auto retail · industrial cold storage · multifamily Sun Belt · MOB · etc.",
+      "examples": ["Dollar General STNL", "Walgreens corner", "industrial cold storage", "QSR ground lease (McDonald's)"]
+    },
+    "market": {
+      "type": "string",
+      "description": "MSA or city/state · Tampa FL · Dallas TX · Memphis TN · Phoenix AZ · etc.",
+      "examples": ["Tampa FL", "Memphis TN", "Phoenix AZ"]
+    },
+    "submarket": {
+      "type": "string",
+      "description": "Optional finer-grained location · I-4 Corridor · NE Tampa · Buckhead · etc."
+    },
+    "price": {
+      "type": "string",
+      "description": "Asking price · pre-formatted with $/M/K notation",
+      "examples": ["$2.4M", "$14M", "$3,100,000"]
+    },
+    "cap_rate": {
+      "type": "string",
+      "description": "Asking cap rate · pre-formatted as percentage or band",
+      "examples": ["6.85%", "6.25-6.50%", "7.00-7.40%"]
+    },
+    "noi": {
+      "type": "string",
+      "description": "Net operating income · annual · optional but improves output quality",
+      "examples": ["$164,400", "$1,001,400-$1,068,000"]
+    },
+    "tenant_credit": {
+      "type": "string",
+      "description": "Credit tier and rating — BBB / IG · BBB+ / IG · BB / sub-IG · A- / IG · Moody's Baa2 · non-rated franchisee · etc.",
+      "examples": ["BBB / IG", "A- / IG", "non-rated franchisee"]
+    },
+    "tenant_brand": {
+      "type": "string",
+      "description": "Specific tenant brand name · Dollar General · Walgreens · 7-Eleven · McDonald's · Tractor Supply · etc."
+    },
+    "lease_term_remaining": {
+      "type": "string",
+      "description": "Years remaining + structure",
+      "examples": ["12-yr NNN with 4 (5-yr) options", "10 years remaining", "8-yr NN no options"]
+    },
+    "rent_escalations": {
+      "type": "string",
+      "description": "Bump pattern · 10% every 5 · CPI-linked · flat · etc."
+    },
+    "size_sf": {
+      "type": "string",
+      "description": "Building square footage · ONLY include if from rent roll or lease · do not estimate"
+    },
+    "lot_size_acres": {
+      "type": "string",
+      "description": "Land size · ONLY include if from survey"
+    },
+    "year_built": {
+      "type": "string",
+      "description": "ONLY include if confirmed from public records"
+    },
+    "buyer_segment": {
+      "type": "string",
+      "description": "Target buyer segment for this deliverable (informs voice/angle)",
+      "enum": [
+        "1031-fl-stnl-buyers",
+        "dg-active-allocators",
+        "mid-market-stnl-buyers",
+        "Sun-Belt-MF-syndicators",
+        "industrial-portfolio-buyers",
+        "REIT-acquisition-desks",
+        "single-asset-individual",
+        "family-office",
+        "open-air"
+      ]
+    },
+    "deliverable_type": {
+      "type": "string",
+      "description": "Which of the 10 Bookmaker deliverable types is requested",
+      "enum": [
+        "om_pdf",
+        "landing_page",
+        "eblast",
+        "costar_listing",
+        "social_card",
+        "flier",
+        "investor_toc",
+        "map_caption",
+        "comp_callout",
+        "photo_brief"
+      ]
+    },
+    "brand_pack_id": {
+      "type": "string",
+      "description": "Firm brand pack to apply · default 'swarm_and_bee' · could be 'atlas_as_a_closer' or a vendor REIT brand"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "Specific template within the deliverable type · stnl-default · institutional-pitch · 1031-clock · etc."
+    },
+    "hedera_anchor_topic": {
+      "type": "string",
+      "description": "HCS topic for receipt · default 0.0.10291838 (firm deed anchor topic)",
+      "default": "0.0.10291838"
+    },
+    "extras": {
+      "type": "object",
+      "description": "Open-ended Hack notes for the Bookmaker · drone shots requested · seller wants quick close · tax-deferred angle · etc.",
+      "additionalProperties": true
+    }
+  }
+}

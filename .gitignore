@@ -1,0 +1,66 @@
+## Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+
+## Environments
+.venv/
+venv/
+env/
+.env
+.env.local
+.python-version
+
+## uv
+uv.lock.bak
+
+## IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+## Testing & coverage
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+## Cook outputs (large · belong on NAS not git)
+checkpoints/
+merged/
+*.safetensors
+*.bin
+*.pt
+*.pth
+logs/
+wandb/
+
+## Corpus (lives on NAS at /tmp/swarm-nfs/atlas-bookmaker/v2/ · not in git)
+corpus/data/
+*.jsonl
+!eval/prompts/*.jsonl
+!**/example_*.jsonl
+
+## Vast.ai / smash secrets
+.ssh-keys/
+hf_token.txt
+hedera_*.json
+*_creds.json
+
+## Discord webhook URLs (NEVER commit)
+discord_webhook.txt
+*.webhook
+
+## Local notes
+SCRATCH.md
+NOTES.md
